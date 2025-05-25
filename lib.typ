@@ -17,15 +17,32 @@
     gray: "#ffffff",
     cyan: "#89DDFF",
     background: "#eeeeee"
+  ),
+  snazzy-light: (
+    black: "#565869",
+    white: "#FFFFFF",
+    red: "#FF5C57",
+    green: "#2DAE58",
+    blue: "#09A1ED",
+    yellow: "#F5B900",
+    orange: "#CF9C00",
+    purple: "#F767BB",
+    brown: "#FFAEAC",
+    pink: "#FF94D2",
+    gray: "#FAFBF9",
+    cyan: "#13BBB7",
+    background: "#eeeeee"
   )
 )
 
+/// [INTERNAL] Get a semi unique seed for the document
+/// 
+/// -> int: The seed from the document layout
 #let get_compilation_seed() = {
   let headings = query(heading)
   let figures = query(figure)
   let equations = query(math.equation)
   
-  // Create entropy from document structure
   let base_entropy = headings.len() * 31 + figures.len() * 37 + equations.len() * 41 + 12 * 1
   
   let today = datetime.today()
@@ -34,6 +51,22 @@
   return calc.rem(base_entropy * 1009 + date_entropy, 100000)
 }
 
+/// Generates a """""random""""" shape with the given parameters
+///
+/// - width_ratio (int): a stupid parameter, you can control the ratio of the width in relation to the height
+/// - cell_size (int): The canvas cell size
+/// - canvas_padding (int): The canvas padding
+/// - line_width (int): 
+/// - small_circle_radius (int): 
+/// - dot_radius (int): 
+/// - empty_shape_stroke (int): 
+/// - render_grid (bool): ?
+/// - objects_count (int): 
+/// - polygon_vertices (int): 
+/// - _seed (int | none): The final seed to pass down to the pulgin
+/// - color_theme (dict): The palette to pass down to the plugin (color mapping)
+/// - image_options (dict): Other options for the generated image
+/// -> image
 #let shape(
   width_ratio: 1,
   cell_size: 50,
@@ -64,7 +97,6 @@
     height = 3
   }
 
-
   image( format: "svg",
     shapemaker.svg(
       bytes(str(width) + "x" + str(height)),
@@ -84,6 +116,11 @@
   )
 }
 
+/// Self explanatory
+///
+/// - number (int): The number of shapes
+/// - options (dict): The shape options to pass down
+/// -> A grid of shapes
 #let shape_strip(number: 1, ..options) = {
   let shapes = range(number)
   shapes = shapes.map(s => shape(..options))
@@ -94,6 +131,11 @@
   )
 }
 
+
+/// A 12 color palette generator from a base color.
+///
+/// - base-color (color): the base color for generating the palette
+/// -> dictionnary: The 💅 palette 💅
 #let generate-palette(base-color) = {
   let rgb_base = rgb(base-color)
   (
