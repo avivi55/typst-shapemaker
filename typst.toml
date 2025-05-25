@@ -1,0 +1,7 @@
+[package]
+name = "shapemaker"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["Jacques Sghomonyan"]
+license = "Unlicense"
+description = "A port of the shapemaker project in typst"
